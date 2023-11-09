@@ -24,7 +24,7 @@
 
 ## Nice to have's (do this if you're done with the above)
 
-- The slider is from right to left on the x axis
+- The slider is animated from right to left on the x axis
 
 - onMouseEnter, the animation slows down or pauses.
 
@@ -35,3 +35,7 @@
 - [GSAP Seamless Loop Documentation](https://gsap.com/docs/v3/HelperFunctions/helpers/seamlessLoop/)
 
 - [Working codepen example (in vanillaJS)](https://codepen.io/GreenSock/pen/gOvvJee)
+
+## Good to know
+
+- This will only work on locally or on codepen cause project contains demo version of GSAP plugin [inertia](https://gsap.com/docs/v3/Plugins/InertiaPlugin/).
