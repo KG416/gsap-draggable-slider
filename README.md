@@ -1,5 +1,17 @@
 # The Shield Playground - GSAP Draggable Carousel Horizontal Loop Slider Inertia Demo
 
+## Getting started
+
+1. Clone this repo - `git clone https://github.com/KG416/gsap-draggable-slider.git`
+
+2. CD into project folder - `cd gsap-draggable-slider`
+
+3. Install dependencies - `yarn install`
+
+4. Start local dev server & get cracking - `yarn start`
+
+![Santi Cazorla](https://media.giphy.com/media/3o6gbdSUO2AaHPjekU/giphy.gif)
+
 ## Definition of done's
 
 [Link to prototype (working example in vanillaJS)](https://codepen.io/GreenSock/pen/gOvvJee)
