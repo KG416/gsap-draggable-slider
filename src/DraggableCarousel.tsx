@@ -1,14 +1,5 @@
-/**
- * WIP
- *
- * Current state -> sort of works but code is completely vanilla
- * and not adapted to react.
- *
- * To use, first run `yarn add gsap-trial` to get access to inertia plugin
- */
-'use client';
-
-import React, { useLayoutEffect, useRef, useState } from 'react';
+'use client'
+import React, { useLayoutEffect, useRef, useState, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
 import { horizontalLoopDraggable } from './horizontalLoopDraggable';
 
@@ -19,41 +10,45 @@ const colors = ['bg-green-500', 'bg-orange-500', 'bg-white', 'bg-purple-500'];
 const DraggableCarousel: React.FC = () => {
   const middleItem = Math.round(mockList.length / 2);
 
-  const [activeIndex, setActiveIndex] = useState<number | null>(middleItem);
+  const [activeIndex, setActiveIndex] = useState<number>(middleItem);
   const [loop, setLoop] = useState<gsap.core.Timeline | null>(null);
-  const [overflow, setOverflow] = useState<boolean>(false);
+  const [overflow, setOverflow] = useState<boolean>(false); // Adding the overflow state
+
   const listRef = useRef<HTMLUListElement>(null);
+  const boxesRef = useRef<HTMLLIElement[]>([]);
 
-  useLayoutEffect(() => {
-    console.log('useEffect');
-    if (!listRef.current) return;
-
-    const boxes = Array.from(listRef.current.querySelectorAll('.box'));
-
-    let activeElement: any;
-    const newLoop = horizontalLoopDraggable(boxes, {
-      paused: true,
-      draggable: true,
-      center: true, // active element is the one in the center of the container rather than th left edge
-      onChange: (element: any, index: number) => {
-        console.log({ element });
-        // when the active element changes, this function gets called.
-        activeElement && activeElement.classList.remove('active');
-        element.classList.add('active');
-        activeElement = element;
-      },
-    });
-    setLoop(newLoop);
-
-    gsap.set(boxes, { backgroundColor: gsap.utils.wrap(colors) });
+  const handleElementChange = useCallback((element: HTMLLIElement, index: number) => {
+    setActiveIndex(index);
   }, []);
 
+  
+  useEffect(() => {
+    if (!listRef.current) return;
+    
+    const boxes = Array.from(listRef.current.children) as HTMLLIElement[];
+    boxesRef.current = boxes;
+  }, [listRef]);
+  
+  useLayoutEffect(() => {
+    if (boxesRef.current.length === 0) return;
+    
+    const newLoop = horizontalLoopDraggable(boxesRef.current, {
+      paused: true,
+      draggable: true,
+      center: true,
+      onChange: handleElementChange,
+    });
+    setLoop(newLoop);
+    
+    gsap.set(boxesRef.current, { backgroundColor: gsap.utils.wrap(colors) });
+  }, [boxesRef, handleElementChange]);
+  
   const handleBoxClick = (i: number) => {
     loop?.toIndex(i, { duration: 0.8, ease: 'power1.inOut' });
     setActiveIndex(i);
   };
 
-  const handlePrev = () => {
+  const handlePrev = () => { 
     loop?.previous({ duration: 0.4, ease: 'power1.inOut' });
   };
 
@@ -62,7 +57,7 @@ const DraggableCarousel: React.FC = () => {
   };
 
   const toggleOverflow = () => {
-    setOverflow((prevState) => !prevState);
+    setOverflow((prevState) => !prevState); // Fixing the toggleOverflow function
   };
 
   return (
@@ -91,7 +86,7 @@ const DraggableCarousel: React.FC = () => {
       </div>
 
       <div className='quiet'>
-        activeIndex: {JSON.stringify(activeIndex)} (WIP)
+        activeIndex: {JSON.stringify(activeIndex + 1)} (WIP)
       </div>
 
       <div className='flex items-center justify-center h-[50vh] text-white'>
@@ -102,7 +97,7 @@ const DraggableCarousel: React.FC = () => {
         >
           <ul
             ref={listRef}
-            className='absolute top-0 left-0 w-full h-full flex items-center justify-center bg-blue-500'
+            className='absolute top-0 left-0 w-full h-full flex items-center bg-blue-500'
           >
             {mockList.map((item, i) => (
               <li
